@@ -21,11 +21,16 @@ void Interface::setCursor(COORD coord)
 	SetConsoleCursorPosition(hCon, coord);
 }
 
-void Interface::showCards(CardHolder& player, bool isFace)
+Interface::Interface()
 {
-	int whoseCards = player.getID();
+	chipsPlaceHolder = "+++++++++++++++\n+             +\n+++++++++++++++";
+}
+
+void Interface::showCards(CardHolder& cardHolder, bool isFace)
+{
+	int whoseCards = cardHolder.getID();
 	std::vector<Card> deck;
-	deck = player.getCards();
+	deck = cardHolder.getCards();
 	short quantity = deck.size();
 	COORD cursor;
 	cursor.X = quantity == 2 ? 50 : quantity == 3 ? 45 : quantity == 4 ? 40 : 35;
@@ -65,5 +70,65 @@ void Interface::endRound(Deck& deck, CardHolder& player, CardHolder& croupier, C
 	croupier.endRound();
 	table.endRound();
 	system("cls");
+}
+
+void Interface::showChips(CardHolder& cardholder)
+{
+	short whoseChips = cardholder.getID();
+	if (whoseChips < 1 || whoseChips > 2) throw "only player and croupier have chips to show";
+	short chips = cardholder.getChips();
+	COORD cursor;
+	cursor.X = 5;
+	cursor.Y = whoseChips == 1 ? 21 : 2;
+	setCursor(cursor);
+	std::cout << '$' << chips;
+}
+
+void Interface::showChipsPlaceHolders()
+{
+	COORD cursor;
+	cursor.X = 0;
+	cursor.Y = 0;
+	setCursor(cursor);
+	std::cout << "Croupier chips:\n";
+	short count = 0;
+	for (size_t i{ 0 }; i < chipsPlaceHolder.size(); i++)
+	{
+		if (chipsPlaceHolder.at(i) == '\n')
+		{
+			cursor = getCursor();
+			cursor.X -= count;
+			cursor.Y++;
+			setCursor(cursor);
+			count = 0;
+			continue;
+		}
+		std::cout << chipsPlaceHolder.at(i);
+		count++;
+	}
+
+	cursor.X = 2;
+	cursor.Y = 19;
+	setCursor(cursor);
+	std::cout << "Your chips:\n";
+	cursor.X = 0;
+	cursor.Y++;
+	setCursor(cursor);
+	count = 0;
+	for (size_t i{ 0 }; i < chipsPlaceHolder.size(); i++)
+	{
+		if (chipsPlaceHolder.at(i) == '\n')
+		{
+			cursor = getCursor();
+			cursor.X -= count;
+			cursor.Y++;
+			setCursor(cursor);
+			count = 0;
+			continue;
+		}
+		std::cout << chipsPlaceHolder.at(i);
+		count++;
+	}
+	
 }
 

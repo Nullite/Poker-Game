@@ -2,46 +2,15 @@
 
 int main()
 {
+	Interface game;
+	Player player;
+	Croupier croupier;
 	try
 	{
-		Interface game;
-		Deck deck;
-		deck.shuffle();
-		Player player;
-		Croupier croupier;
-		Table table;
-		player.takeCards(deck);
-		croupier.takeCards(deck);
-		table.takeCards(deck);
-		game.showCards(player, true);
-		game.showCards(croupier, false);
-		game.showCards(table, true);
-		Sleep(5000);
-		table.takeCards(deck);
-		game.showCards(table, true);
-		Sleep(5000);
-		table.takeCards(deck);
-		game.showCards(table, true);
-		Sleep(5000);
-		game.showCards(croupier, true);
-		Sleep(5000);
-		game.endRound(deck, player, croupier, table);
-		player.takeCards(deck);
-		croupier.takeCards(deck);
-		table.takeCards(deck);
-		game.showCards(player, true);
-		game.showCards(croupier, false);
-		game.showCards(table, true);
-		Sleep(5000);
-		table.takeCards(deck);
-		game.showCards(table, true);
-		Sleep(5000);
-		table.takeCards(deck);
-		game.showCards(table, true);
-		Sleep(5000);
-		game.showCards(croupier, true);
-		Sleep(5000);
-		Sleep(1000000000000);
+		game.showChipsPlaceHolders();
+		game.showChips(player);
+		game.showChips(croupier);
+		Sleep(100000000);
 	}
 	catch (const char* exept)
 	{

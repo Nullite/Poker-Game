@@ -24,14 +24,25 @@ void CardHolder::endRound()
 	cards.clear();
 }
 
+short CardHolder::getChips()
+{
+	return chips;
+}
+
 void Player::setID()
 {
 	ID = 1;
 }
 
+void Player::setChips()
+{
+	chips = 1000;
+}
+
 Player::Player()
 {
 	setID();
+	setChips();
 }
 
 void Croupier::setID()
@@ -39,9 +50,15 @@ void Croupier::setID()
 	ID = 2;
 }
 
+void Croupier::setChips()
+{
+	chips = 10000;
+}
+
 Croupier::Croupier()
 {
 	setID();
+	setChips();
 }
 
 void Table::setID()
@@ -78,4 +95,9 @@ void Table::endRound()
 {
 	cards.clear();
 	roundCount = 0;
+}
+
+void Table::setChips()
+{
+	chips = 0;
 }
