@@ -1,0 +1,81 @@
+#include "CardHolder.h"
+
+void CardHolder::takeCards(Deck& deck)
+{
+	for (size_t i{ 0 }; i < 2; ++i)
+	{
+		Card card = deck.getCard();
+		cards.push_back(card);
+	}
+}
+
+std::vector<Card> CardHolder::getCards()
+{
+	return cards;
+}
+
+int CardHolder::getID()
+{
+	return ID;
+}
+
+void CardHolder::endRound()
+{
+	cards.clear();
+}
+
+void Player::setID()
+{
+	ID = 1;
+}
+
+Player::Player()
+{
+	setID();
+}
+
+void Croupier::setID()
+{
+	ID = 2;
+}
+
+Croupier::Croupier()
+{
+	setID();
+}
+
+void Table::setID()
+{
+	ID = 3;
+}
+
+Table::Table()
+{
+	setID();
+	roundCount = 0;
+}
+
+void Table::takeCards(Deck& deck)
+{
+	roundCount++;
+	if (roundCount > 3) throw "table can take cards just 3 rounds";
+	if (roundCount == 1)
+	{
+		for (size_t i{ 0 }; i < 3; ++i)
+		{
+			Card card = deck.getCard();
+			cards.push_back(card);
+		}
+	}
+	else
+	{
+		Card card = deck.getCard();
+		cards.push_back(card);
+	}	
+}
+
+void Table::endRound()
+{
+	cards.clear();
+	roundCount = 0;
+}
