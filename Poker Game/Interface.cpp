@@ -21,9 +21,30 @@ void Interface::setCursor(COORD coord)
 	SetConsoleCursorPosition(hCon, coord);
 }
 
+std::string Interface::getLineTodisplay(size_t& from, std::string _where)
+{
+	std::string displayLine;
+	for (from; ; from++)
+	{
+		if (from == _where.size()) return displayLine;
+		if (_where.at(from) == '\n') return displayLine;
+		displayLine += _where.at(from);
+	}
+}
+
+bool Interface::checkIfRedSuit(std::string card)
+{
+	for (size_t i{ 0 }; i < card.size(); i++)
+	{
+		if (card.at(i) == '\x1b') return true;
+	}
+	return false;
+}
+
 Interface::Interface()
 {
 	chipsPlaceHolder = "+++++++++++++++\n+             +\n+++++++++++++++";
+	actionPlaceHolder = "+++++++++++++++++++++++++++++++++\n+       +        +       +      + \n+  \x1b[36mBET\x1b[0m  + \x1b[33m3x BET\x1b[0m + \x1b[32mCHECK\x1b[0m + \x1b[31mFOLD\x1b[0m +\n+       +        +       +      +\n+++++++++++++++++++++++++++++++++";
 }
 
 void Interface::showCards(CardHolder& cardHolder, bool isFace)
@@ -42,20 +63,15 @@ void Interface::showCards(CardHolder& cardHolder, bool isFace)
 	{
 		Card card = deck.at(i);
 		std::string blanck = isFace ? card.getCard() : card.getCardBack();
-		int count = 0;
 		for (size_t j{ 0 }; j < blanck.size(); j++)
 		{
-			if (blanck.at(j) == '\n')
-			{
+			std::string displayLine = getLineTodisplay(j, blanck);
+			std::cout << displayLine;
 				cursor = getCursor();
-				cursor.X -= count;
+				if (checkIfRedSuit(displayLine)) cursor.X -= displayLine.size() - 9;
+				else cursor.X -= displayLine.size();
 				cursor.Y++;
 				setCursor(cursor);
-				count = 0;
-				continue;
-			}
-			std::cout << blanck.at(j);
-			count++;
 		}
 		cursor.X += whoseCards == 3 ? 9 : 10;	
 		cursor.Y = high;
@@ -91,20 +107,17 @@ void Interface::showChipsPlaceHolders()
 	cursor.Y = 0;
 	setCursor(cursor);
 	std::cout << "Croupier chips:\n";
-	short count = 0;
+	cursor.X = 0;
+	cursor.Y = 0;
+	setCursor(cursor);
 	for (size_t i{ 0 }; i < chipsPlaceHolder.size(); i++)
 	{
-		if (chipsPlaceHolder.at(i) == '\n')
-		{
-			cursor = getCursor();
-			cursor.X -= count;
-			cursor.Y++;
-			setCursor(cursor);
-			count = 0;
-			continue;
-		}
-		std::cout << chipsPlaceHolder.at(i);
-		count++;
+		std::string displayLine = getLineTodisplay(i, chipsPlaceHolder);
+		cursor = getCursor();
+		cursor.X = 0;
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << displayLine;
 	}
 
 	cursor.X = 2;
@@ -112,23 +125,33 @@ void Interface::showChipsPlaceHolders()
 	setCursor(cursor);
 	std::cout << "Your chips:\n";
 	cursor.X = 0;
-	cursor.Y++;
+	cursor.Y = 19;
 	setCursor(cursor);
-	count = 0;
 	for (size_t i{ 0 }; i < chipsPlaceHolder.size(); i++)
 	{
-		if (chipsPlaceHolder.at(i) == '\n')
-		{
+		std::string displayLine = getLineTodisplay(i, chipsPlaceHolder);
+		cursor = getCursor();
+		cursor.X = 0;
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << displayLine;
+	}	
+}
+
+void Interface::showActionPlaceHolder()
+{
+	COORD cursor;
+	cursor.X = 0;
+	cursor.Y = 24;
+	setCursor(cursor);
+	for (size_t i{ 0 }; i < actionPlaceHolder.size(); i++)
+	{
+		std::string displayLine = getLineTodisplay(i, actionPlaceHolder);
 			cursor = getCursor();
-			cursor.X -= count;
+			cursor.X = 0;
 			cursor.Y++;
 			setCursor(cursor);
-			count = 0;
-			continue;
-		}
-		std::cout << chipsPlaceHolder.at(i);
-		count++;
+		std::cout << displayLine;
 	}
-	
 }
 

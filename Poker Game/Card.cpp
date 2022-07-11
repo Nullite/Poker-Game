@@ -17,8 +17,17 @@ Card::Card()
 	{
 		card.replace(12, 1, blanck.value);
 		card.replace(56, 1, blanck.value);
-	}	
-	card.replace(34, 1, blanck.suit);
+	}
+	if (suit == hearts || suit == diamond)
+	{
+		std::string temp = "\x1b[31m" + blanck.suit + "\x1b[0m";
+		card.replace(34, 1, temp);
+	}
+	else
+	{
+		card.replace(34, 1, blanck.suit);
+	}
+	
 	suit = suit == peak ? hearts : ++suit;
 }
 
