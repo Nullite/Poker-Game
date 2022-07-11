@@ -20,6 +20,19 @@ int main()
 		game.showCards(player, true);
 		game.showCards(croupier, false);
 		game.showCards(table, true);
+		Sleep(2000);
+		player.bet(50);
+		croupier.bet(50);
+		game.showChips(player);
+		game.showChips(croupier);
+		table.takeCards(deck);
+		Sleep(2000);
+		game.showCards(table, true);
+		table.takeCards(deck);
+		Sleep(2000);
+		game.showCards(table, true);
+		Sleep(2000);
+		game.showCards(croupier, true);
 		Sleep(100000000);
 	}
 	catch (const char* exept)

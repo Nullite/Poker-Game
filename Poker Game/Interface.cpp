@@ -97,6 +97,8 @@ void Interface::showChips(CardHolder& cardholder)
 	cursor.X = 5;
 	cursor.Y = whoseChips == 1 ? 21 : 2;
 	setCursor(cursor);
+	std::cout << "      ";
+	setCursor(cursor);
 	std::cout << '$' << chips;
 }
 

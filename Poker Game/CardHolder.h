@@ -15,6 +15,7 @@ public:
 	virtual void setChips() = 0;
 	virtual void endRound();
 	short getChips();
+	void bet(short bet);
 };
 
 class Player : public CardHolder

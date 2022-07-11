@@ -29,6 +29,11 @@ short CardHolder::getChips()
 	return chips;
 }
 
+void CardHolder::bet(short bet)
+{
+	chips -= bet;
+}
+
 void Player::setID()
 {
 	ID = 1;
