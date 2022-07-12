@@ -1,4 +1,5 @@
 ﻿#include "interface.h"
+#include "WinnerDeterminant.h"
 
 int main()
 {
@@ -7,17 +8,24 @@ int main()
 	Player player;
 	Croupier croupier;
 	Table table;
+	
 	try
 	{
-		while (1)
-		{
-			game.initRound(deck, player, croupier);
-			game.round(deck, player, croupier, table);
-			game.showDown(croupier);
-			Sleep(10000);
-			game.endRound(deck, player, croupier, table);
-		}
-		
+		deck.shuffle();
+		player.takeCards(deck);
+		croupier.takeCards(deck);
+		table.takeCards(deck);
+		table.takeCards(deck);
+		table.takeCards(deck);
+		WinnerDeterminant whoseWin(player, croupier, table);
+	//	/*while (1)
+	//	{
+	//		game.initRound(deck, player, croupier);
+	//		game.round(deck, player, croupier, table);
+	//		game.showDown(croupier);
+	//		Sleep(10000);
+	//		game.endRound(deck, player, croupier, table);
+	//	}
 	}
 	catch (const char* exept)
 	{
