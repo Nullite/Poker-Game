@@ -5,6 +5,7 @@
 #include "Card.h"
 class Interface
 {
+	short roundCount;
 	short bank;
 	std::string chipsPlaceHolder;
 	std::string actionPlaceHolder;
@@ -15,6 +16,7 @@ class Interface
 	bool checkIfRedSuit(std::string card);
 	void underlineMenuActions(short action);
 	void eraseUnderLine(short action);
+	void clearTable();
 public:
 	Interface();
 	void showCards(CardHolder& cardHolder, bool isFace);
@@ -25,5 +27,10 @@ public:
 	short selectMenuActions();
 	void showBankPlaceHolder();
 	void showBank();
+	void bet(short bet, CardHolder& cardHolder);
+	bool action(CardHolder& player, CardHolder& croupier);
+	void initRound(Deck& deck, CardHolder& player, CardHolder& croupier);
+	void round(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table);
+	void showDown(CardHolder& croupier);
 };
 

@@ -43,6 +43,7 @@ bool Interface::checkIfRedSuit(std::string card)
 
 Interface::Interface()
 {
+	roundCount = 0;
 	bank = 0;
 	bankPlaceHolder = "+++++++++++++++\n+             +\n+++++++++++++++";
 	chipsPlaceHolder = "+++++++++++++++\n+             +\n+++++++++++++++";
@@ -83,11 +84,13 @@ void Interface::showCards(CardHolder& cardHolder, bool isFace)
 
 void Interface::endRound(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table)
 {
+	bank = 0;
+	roundCount = 0;
 	deck.endRound();
 	player.endRound();
 	croupier.endRound();
 	table.endRound();
-	system("cls");
+	clearTable();
 }
 
 void Interface::showChips(CardHolder& cardholder)
@@ -189,6 +192,19 @@ void Interface::eraseUnderLine(short action)
 	}
 }
 
+void Interface::clearTable()
+{
+	COORD cursor;
+	cursor.X = 35;
+	cursor.Y = 10;
+	setCursor(cursor);
+	for (size_t i{ 0 }; i < 16; ++i)
+	{
+		std::cout << "                                                 ";
+		cursor.Y++;
+	}
+}
+
 short Interface::selectMenuActions()
 {
 	short cursor = 1;
@@ -253,6 +269,69 @@ void Interface::showBank()
 	cursor.X = bank < 10 ? 7 : bank < 1000 ? 6 : 5;
 	setCursor(cursor);
 	std::cout << bank;
+}
+
+void Interface::bet(short bet, CardHolder& cardHolder)
+{
+	if (bet < 1 || bet > 3) throw "bet have only three optons: 1 - bet, 2 - 3x bet, 3 - blind";
+	bet = bet == 1 ? 50 : bet == 2 ? 150 : 25;
+	cardHolder.bet(bet);
+	showChips(cardHolder);
+	bank += bet;
+	showBank();
+}
+
+bool Interface::action(CardHolder& player, CardHolder& croupier)
+{
+	short action = selectMenuActions();
+	if (action != 4)
+	{
+		this->bet(action, player);
+		this->bet(action, croupier);
+		return true;
+	}
+		croupier.winChips(bank);
+		showChips(croupier);
+		bank = 0;
+		showBank();
+		return false;
+}
+
+void Interface::initRound(Deck& deck, CardHolder& player, CardHolder& croupier)
+{
+	showChipsPlaceHolders();
+	showChips(player);
+	showChips(croupier);
+	showActionPlaceHolder();
+	showBankPlaceHolder();
+	showBank();
+
+	deck.shuffle();
+	player.takeCards(deck);
+	croupier.takeCards(deck);
+	showCards(player, true);
+	showCards(croupier, false);
+	Sleep(1000);
+	bet(3, player);
+	bet(3, croupier);
+}
+
+void Interface::round(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table)
+{
+	bool isAction = action(player, croupier);
+	++roundCount;
+	while (isAction && roundCount < 4)
+	{
+		table.takeCards(deck);
+		showCards(table, true);
+		isAction = action(player, croupier);
+		++roundCount;
+	}
+}
+
+void Interface::showDown(CardHolder& croupier)
+{
+	showCards(croupier, true);
 }
 
 void Interface::underlineMenuActions(short action)

@@ -19,6 +19,11 @@ int CardHolder::getID()
 	return ID;
 }
 
+void CardHolder::winChips(short bank)
+{
+	chips += bank;
+}
+
 void CardHolder::endRound()
 {
 	cards.clear();
@@ -106,3 +111,5 @@ void Table::setChips()
 {
 	chips = 0;
 }
+
+

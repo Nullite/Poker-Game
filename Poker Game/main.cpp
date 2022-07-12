@@ -9,32 +9,15 @@ int main()
 	Table table;
 	try
 	{
-		deck.shuffle();
-		player.takeCards(deck);
-		croupier.takeCards(deck);
-		table.takeCards(deck);
-		game.showChipsPlaceHolders();
-		game.showChips(player);
-		game.showChips(croupier);
-		game.showActionPlaceHolder();
-		game.showBankPlaceHolder();
-		game.showBank();
-		game.showCards(player, true);
-		game.showCards(croupier, false);
-		game.showCards(table, true);
-		game.selectMenuActions();
-		player.bet(50);
-		croupier.bet(50);
-		game.showChips(croupier);
-		table.takeCards(deck);
-		game.selectMenuActions();
-		game.showCards(table, true);
-		table.takeCards(deck);
-		game.selectMenuActions();
-		game.showCards(table, true);
-		game.selectMenuActions();
-		game.showCards(croupier, true);
-		game.selectMenuActions();
+		while (1)
+		{
+			game.initRound(deck, player, croupier);
+			game.round(deck, player, croupier, table);
+			game.showDown(croupier);
+			Sleep(10000);
+			game.endRound(deck, player, croupier, table);
+		}
+		
 	}
 	catch (const char* exept)
 	{

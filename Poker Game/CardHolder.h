@@ -13,6 +13,7 @@ public:
 	std::vector<Card> getCards();
 	int getID();
 	virtual void setChips() = 0;
+	void winChips(short bank);
 	virtual void endRound();
 	short getChips();
 	void bet(short bet);
@@ -45,4 +46,3 @@ public:
 	void endRound() override;
 	void setChips() override;
 };
-
