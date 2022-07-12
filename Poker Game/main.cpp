@@ -17,23 +17,24 @@ int main()
 		game.showChips(player);
 		game.showChips(croupier);
 		game.showActionPlaceHolder();
+		game.showBankPlaceHolder();
+		game.showBank();
 		game.showCards(player, true);
 		game.showCards(croupier, false);
 		game.showCards(table, true);
-		Sleep(2000);
+		game.selectMenuActions();
 		player.bet(50);
 		croupier.bet(50);
-		game.showChips(player);
 		game.showChips(croupier);
 		table.takeCards(deck);
-		Sleep(2000);
+		game.selectMenuActions();
 		game.showCards(table, true);
 		table.takeCards(deck);
-		Sleep(2000);
+		game.selectMenuActions();
 		game.showCards(table, true);
-		Sleep(2000);
+		game.selectMenuActions();
 		game.showCards(croupier, true);
-		Sleep(100000000);
+		game.selectMenuActions();
 	}
 	catch (const char* exept)
 	{

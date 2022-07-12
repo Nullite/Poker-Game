@@ -43,6 +43,8 @@ bool Interface::checkIfRedSuit(std::string card)
 
 Interface::Interface()
 {
+	bank = 0;
+	bankPlaceHolder = "+++++++++++++++\n+             +\n+++++++++++++++";
 	chipsPlaceHolder = "+++++++++++++++\n+             +\n+++++++++++++++";
 	actionPlaceHolder = "+++++++++++++++++++++++++++++++++\n+       +        +       +      + \n+  \x1b[36mBET\x1b[0m  + \x1b[33m3x BET\x1b[0m + \x1b[32mCHECK\x1b[0m + \x1b[31mFOLD\x1b[0m +\n+       +        +       +      +\n+++++++++++++++++++++++++++++++++";
 }
@@ -153,6 +155,139 @@ void Interface::showActionPlaceHolder()
 			cursor.X = 0;
 			cursor.Y++;
 			setCursor(cursor);
+		std::cout << displayLine;
+	}
+}
+
+void Interface::eraseUnderLine(short action)
+{
+	if (action < 1 || action > 4) throw "action must be from 1 to 4";
+	std::string frame = "       \n+++++++";
+	COORD cursor;
+	if (action == 4)
+	{
+		frame.erase(frame.begin());
+		frame.erase(frame.end());
+	}
+	else if (action == 2)
+	{
+		frame.insert(frame.begin(), ' ');
+		frame.insert(frame.end(), '+');
+	}
+	int target = action == 1 ? 1 : action == 2 ? 9 : action == 3 ? 18 : 26;
+	cursor.X = target;
+	cursor.Y = 27;
+	setCursor(cursor);
+	for (size_t i{ 0 }; i < frame.size(); i++)
+	{
+		std::string displayLine = getLineTodisplay(i, frame);
+		cursor = getCursor();
+		cursor.X = target;
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << displayLine;
+	}
+}
+
+short Interface::selectMenuActions()
+{
+	short cursor = 1;
+	underlineMenuActions(cursor);
+	while (1)
+	{
+		short action = _getch();
+		if (action == -32) action = _getch();
+		else if (action == 13) 
+		{
+			eraseUnderLine(cursor);
+			return cursor;
+		}
+		switch (action)
+		{
+		case 77:
+			if (cursor < 4)
+			{
+				eraseUnderLine(cursor);
+				underlineMenuActions(++cursor);
+			}
+			
+			break;
+		case 75:
+			if (cursor > 1)
+			{
+				eraseUnderLine(cursor);
+				underlineMenuActions(--cursor);
+			}	
+		}
+	}
+}
+
+void Interface::showBankPlaceHolder()
+{
+	COORD cursor;
+	cursor.X = 0;
+	cursor.Y = 10;
+	setCursor(cursor);
+	std::cout << "bank:\n";
+	cursor.X = 0;
+	cursor.Y = 10;
+	setCursor(cursor);
+	for (size_t i{ 0 }; i < bankPlaceHolder.size(); i++)
+	{
+		std::string displayLine = getLineTodisplay(i, bankPlaceHolder);
+		cursor = getCursor();
+		cursor.X = 0;
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << displayLine;
+	}
+}
+
+void Interface::showBank()
+{
+	COORD cursor;
+	cursor.X = 2;
+	cursor.Y = 12;
+	setCursor(cursor);
+	std::cout << "          ";
+	cursor.X = bank < 10 ? 7 : bank < 1000 ? 6 : 5;
+	setCursor(cursor);
+	std::cout << bank;
+}
+
+void Interface::underlineMenuActions(short action)
+{
+	if (action < 1 || action > 4) throw "action must be from 1 to 4";
+	std::string frame = "\x1b[31m+++++++\n+++++++\x1b[0m";
+	COORD cursor;
+	if (action == 4) 
+	{
+		frame.erase(frame.begin() + 5);
+		frame.erase(frame.end() - 5);
+	}
+	else if (action == 2)
+	{
+		std::string::iterator it = frame.begin() + 5;
+		for (;it < frame.begin() + 6; ++it)
+		{
+			frame.insert(it, '+');
+		}
+		for (it = frame.end() - 5; it > frame.end() - 7; --it)
+		{
+			frame.insert(it, '+');
+		}
+	}
+	int target = action == 1 ? 1 : action == 2 ? 9 : action == 3 ? 18 : 26;
+	cursor.X = target;
+	cursor.Y = 27;
+	setCursor(cursor);
+	for (size_t i{ 0 }; i < frame.size(); i++)
+	{
+		std::string displayLine = getLineTodisplay(i, frame);
+		cursor = getCursor();
+		cursor.X = target;
+		cursor.Y++;
+		setCursor(cursor);
 		std::cout << displayLine;
 	}
 }
