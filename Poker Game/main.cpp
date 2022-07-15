@@ -12,7 +12,7 @@ int main()
 	try
 	{
 	/*	deck.shuffle();*/
-		deck.getFullHouse();
+		deck.getStraight();
 		player.takeCards(deck);
 	/*	croupier.takeCards(deck);*/
 		table.takeCards(deck);

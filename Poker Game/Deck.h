@@ -56,5 +56,24 @@ public:
 		deck.at(0) = deck.at(24);
 		deck.at(6) = deck.at(49);
 	}
+
+	void getFlush()
+	{
+		deck.at(1) = deck.at(50);
+		deck.at(2) = deck.at(8);
+		deck.at(3) = deck.at(12);
+		deck.at(4) = deck.at(20);
+		deck.at(5) = deck.at(41);
+		deck.at(6) = deck.at(16);
+	}
+
+	void getRoyalFlush()
+	{
+		deck.at(0) = deck.at(34);
+		deck.at(1) = deck.at(38);
+		deck.at(2) = deck.at(42);
+		deck.at(3) = deck.at(46);
+		deck.at(4) = deck.at(50);
+	}
 };
 

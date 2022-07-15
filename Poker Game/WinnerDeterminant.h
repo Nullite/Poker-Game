@@ -28,6 +28,8 @@ class WinnerDeterminant
 	void fillCombinationIfTwoPairs(short ID, std::vector < std::vector<Card>> repeats);
 	void fillCombinationIfSet(short ID, std::vector < std::vector<Card>> repeats);
 	void fillCombinationIfFullHouse(short ID, std::vector < std::vector<Card>> repeats);
+	void fillCombinationIfFlush(short ID);
+	void fillCombinationIfSequence(short ID, std::vector<Card> sequence);
 	
 public:
 	

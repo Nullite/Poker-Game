@@ -171,7 +171,7 @@ std::vector<Card> WinnerDeterminant::getSequence(std::vector<Card> cards)
 	{
 		short shortValue1 = convertValueToShort(cards.at(i).getBlanck().value);
 		short shortValue2 = convertValueToShort(cards.at(i + 1).getBlanck().value);
-		if (shortValue1 != shortValue2 + 1)
+		if (shortValue1 != shortValue2 + 1 && count != 5)
 		{
 			cards.erase(cards.begin() + i);
 			--i;
@@ -236,12 +236,13 @@ void WinnerDeterminant::sortCards(std::vector<Card>& cards)
 bool WinnerDeterminant::isFlush(std::vector<Card>& cards)
 {
 	
-	for (size_t i{ 0 }; i < cards.size() - 1; ++i)
+	for (size_t i{ 0 }; i < cards.size(); ++i)
 	{
 		std::string suit = cards.at(i).getBlanck().suit;
-		short count = 0;
+		short count = 1;
 		for (size_t j{ 0 }; j < cards.size(); ++j)
 		{
+			if (i == j) continue;
 			std::string compare = cards.at(j).getBlanck().suit;
 			if (suit == compare) ++count;
 		}
@@ -279,8 +280,14 @@ void WinnerDeterminant::fillCombinationCards(short combinationID, short cardHold
 	case 3:
 		fillCombinationIfSet(cardHolderID, repeats);
 		break;
+	case 5:
+		fillCombinationIfFlush(cardHolderID);
+		break;
 	case 6:
 		fillCombinationIfFullHouse(cardHolderID, repeats);
+		break;
+	default:
+		fillCombinationIfSequence(cardHolderID, sequence);
 		break;
 	}
 }
@@ -500,5 +507,60 @@ void WinnerDeterminant::fillCombinationIfFullHouse(short ID, std::vector<std::ve
 		for (Card card : pair) croupierCombination.push_back(card);
 		break;
 	}
+}
+
+void WinnerDeterminant::fillCombinationIfFlush(short ID)
+{
+	std::vector<Card> temp;
+
+	switch (ID)
+	{
+	case 1:
+		for (size_t i{ 0 }; i < sharedPlayerCards.size() - 2; ++i)
+		{
+			std::string suit = sharedPlayerCards.at(i).getBlanck().suit;
+			temp.push_back(sharedPlayerCards.at(i));
+			for (size_t j{ 0 }; j < sharedPlayerCards.size(); ++j)
+			{
+				if (i == j) continue;
+				std::string compare = sharedPlayerCards.at(j).getBlanck().suit;
+				if (suit == compare) temp.push_back(sharedPlayerCards.at(j));
+			}
+			if (temp.size() == 5) break;
+			temp.clear();
+		}
+		break;
+	case 2:
+		for (size_t i{ 0 }; i < sharedCroupierCards.size() - 2; ++i)
+		{
+			std::string suit = sharedCroupierCards.at(i).getBlanck().suit;
+			temp.push_back(sharedCroupierCards.at(i));
+			for (size_t j{ 0 }; j < sharedCroupierCards.size(); ++j)
+			{
+				if (i == j) continue;
+				std::string compare = sharedCroupierCards.at(j).getBlanck().suit;
+				if (suit == compare) temp.push_back(sharedCroupierCards.at(j));
+			}
+			if (temp.size() == 5) break;
+			temp.clear();		
+		}
+		break;
+	}
+	sortCards(temp);
+	for (Card card : temp) playerCombination.push_back(card);
+}
+
+void WinnerDeterminant::fillCombinationIfSequence(short ID, std::vector<Card> sequence)
+{
+	switch (ID)
+	{
+	case 1:
+		for (Card card : sequence) playerCombination.push_back(card);
+		break;
+	case 2: 
+		for (Card card : sequence) croupierCombination.push_back(card);
+		break;
+	}
+	
 }
 
