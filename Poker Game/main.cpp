@@ -11,13 +11,26 @@ int main()
 	
 	try
 	{
-		deck.shuffle();
+	/*	deck.shuffle();*/
+		deck.getFullHouse();
 		player.takeCards(deck);
-		croupier.takeCards(deck);
+	/*	croupier.takeCards(deck);*/
 		table.takeCards(deck);
 		table.takeCards(deck);
 		table.takeCards(deck);
 		WinnerDeterminant whoseWin(player, croupier, table);
+		whoseWin.fillSharedCards(player);
+		short a = whoseWin.combinationHandler(player);
+		std::vector<Card> tableCards = table.getCards();
+		std::vector<Card> playerCards = player.getCards();
+		std::vector<Card> combination = whoseWin.getPlayerCombination();
+		for (Card card : tableCards) std::cout << card.getBlanck().value << card.getBlanck().suit << ' ';
+		std::cout << '\n';
+		for (Card card : playerCards) std::cout << card.getBlanck().value << card.getBlanck().suit << ' ';
+		std::cout << '\n';
+		for (Card card : combination) std::cout << card.getBlanck().value << card.getBlanck().suit << ' ';
+		std::cout << '\n';
+		std::cout << a;
 	//	/*while (1)
 	//	{
 	//		game.initRound(deck, player, croupier);
