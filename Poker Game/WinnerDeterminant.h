@@ -1,5 +1,5 @@
 #pragma once
-#include "Interface.h"
+#include "CardHolder.h"
 class WinnerDeterminant
 {
 	enum {highCard, pair, twoPairs, set, straight, flush, fullHouse, fourOfTheKind, straightFlush, royalFlush};
@@ -19,6 +19,7 @@ class WinnerDeterminant
 	std::vector < std::vector<Card>> getRepeats(std::vector<Card> cards);
 	std::vector<Card> getSequence(std::vector<Card> cards);
 	
+	void fillSharedCards(CardHolder& cardHolder);
 	void sortCards(std::vector<Card>& cards);
 	bool isFlush(std::vector<Card>& cards);
 	bool isWheel(std::vector<Card> sequence, std::vector<Card> aceStorage);
@@ -35,8 +36,10 @@ public:
 	
 	WinnerDeterminant(CardHolder& player, CardHolder& croupier, CardHolder& table);
 	WinnerDeterminant(CardHolder& player, CardHolder& table);
-	short combinationHandler(CardHolder& cardHolder);
-	void fillSharedCards(CardHolder& cardHolder);
+	void combinationHandler(CardHolder& cardHolder);
+	short compareCombinations();
+	short getPlayerCombinationID();
+	short getCroupierCombinationID();
 	std::vector<Card> getPlayerCombination();
 	std::vector<Card> getCroupierCombination();
 };

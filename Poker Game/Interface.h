@@ -1,10 +1,8 @@
 #pragma once
-#include <conio.h>
-#include "Deck.h"
-#include "CardHolder.h"
-#include "Card.h"
+#include "WinnerDeterminant.h"
 class Interface
 {
+	bool isFold;
 	short roundCount;
 	short bank;
 	std::string chipsPlaceHolder;
@@ -17,6 +15,14 @@ class Interface
 	void underlineMenuActions(short action);
 	void eraseUnderLine(short action);
 	void clearTable();
+	void displayCombination(short ID, short combinationID, std::vector<Card> combination);
+	std::string convertCombinationIDToString(short combinationID);
+	void clearCombination(CardHolder& cardHolder);
+	void displayWin(short ID);
+	void clearWinDisplay();
+	bool isAllIn(CardHolder& player, CardHolder& croupier);
+	void showAllin(CardHolder& player, CardHolder& croupier);
+	
 public:
 	Interface();
 	void showCards(CardHolder& cardHolder, bool isFace);
@@ -31,6 +37,7 @@ public:
 	bool action(CardHolder& player, CardHolder& croupier);
 	void initRound(Deck& deck, CardHolder& player, CardHolder& croupier);
 	void round(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table);
-	void showDown(CardHolder& croupier);
+	void showDown(CardHolder& croupier, CardHolder& player, CardHolder& table);
+	bool checkIsPartyOver(CardHolder& player, CardHolder& croupier);
 };
 

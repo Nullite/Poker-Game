@@ -65,7 +65,7 @@ std::string Card::getCardBack()
 
 bool operator==(Card& card1, Card& card2)
 {
-	return card1.blanck.value == card2.blanck.value && card1.blanck.suit == card2.blanck.suit;
+	return card1.blanck.value == card2.blanck.value;
 }
 
 bool operator>(Card& card1, Card& card2)

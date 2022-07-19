@@ -90,7 +90,10 @@ void Interface::endRound(Deck& deck, CardHolder& player, CardHolder& croupier, C
 	player.endRound();
 	croupier.endRound();
 	table.endRound();
+	clearWinDisplay();
 	clearTable();
+	clearCombination(player);
+	clearCombination(croupier);
 }
 
 void Interface::showChips(CardHolder& cardholder)
@@ -205,6 +208,173 @@ void Interface::clearTable()
 	}
 }
 
+void Interface::displayCombination(short ID, short combinationID, std::vector<Card> combination)
+{
+	std::string stringCombination = convertCombinationIDToString(combinationID);
+	COORD cursor;
+	switch (ID)
+	{
+	case 1:
+		cursor.X = 80;
+		cursor.Y = 25;
+		setCursor(cursor);
+		std::cout << "                ";
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << "                ";
+		cursor.Y--;
+		setCursor(cursor);
+		std::cout << stringCombination << ':';
+		cursor.Y++;
+		setCursor(cursor);
+		for (size_t i{ 0 }; i < combination.size(); ++i)
+		{
+			std::cout << combination.at(i).getBlanck().value << combination.at(i).getBlanck().suit << ' ';
+		}
+		break;
+	case 2:
+		cursor.X = 80;
+		cursor.Y = 2;
+		setCursor(cursor);
+		std::cout << "                ";
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << "                ";
+		cursor.Y--;
+		setCursor(cursor);
+		std::cout << stringCombination << ':';
+		cursor.Y++;
+		setCursor(cursor);
+		for (size_t i{ 0 }; i < combination.size(); ++i)
+		{
+			std::cout << combination.at(i).getBlanck().value << combination.at(i).getBlanck().suit << ' ';
+		}
+		break;
+	}
+}
+
+std::string Interface::convertCombinationIDToString(short combinationID)
+{
+	switch (combinationID)
+	{
+	case 0:
+		return "High Card";
+	case 1:
+		return "Pair";
+	case 2:
+		return "Two Pairs";
+	case 3:
+		return "Set";
+	case 4:
+		return "Straight";
+	case 5:
+		return "Flush";
+	case 6:
+		return "Fullhouse";
+	case 7:
+		return "Four Of The Kind";
+	case 8:
+		return "Straight-Flush";
+	case 9:
+		return "Royal-Flush";
+	}
+}
+
+void Interface::clearCombination(CardHolder& cardHolder)
+{
+	short ID = cardHolder.getID();
+	COORD cursor;
+	switch (ID)
+	{
+	case 1:
+		cursor.X = 80;
+		cursor.Y = 25;
+		setCursor(cursor);
+		std::cout << "                ";
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << "                ";
+		break;
+	case 2:
+		cursor.X = 80;
+		cursor.Y = 2;
+		setCursor(cursor);
+		std::cout << "                ";
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << "                ";
+		break;
+	}
+}
+
+void Interface::displayWin(short ID)
+{
+	COORD cursor;
+	cursor.X = 85;
+	cursor.Y = 12;
+	setCursor(cursor);
+	switch (ID)
+	{
+	case 0:
+		std::cout << "YOU SPLIT THE BANK $" << bank/2;
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << "CROUPIER SPLIT THE BANK $" << bank / 2;
+		break;
+	case 1:
+		std::cout << "YOU WIN $" << bank;
+		break;
+	case 2:
+		std::cout << "CROUPIER WIN $" << bank;
+		break;
+	}
+}
+
+void Interface::clearWinDisplay()
+{
+	COORD cursor;
+	cursor.X = 80;
+	cursor.Y = 12;
+	setCursor(cursor);
+	std::cout << "               ";
+	cursor.Y++;
+	setCursor(cursor);
+	std::cout << "               ";
+}
+
+bool Interface::isAllIn(CardHolder& player, CardHolder& croupier)
+{
+	if (player.getChips() == 0 || croupier.getChips() == 0) return true;
+	return false;
+}
+
+void Interface::showAllin(CardHolder& player, CardHolder& croupier)
+{
+	COORD cursor;
+	if (!player.getChips())
+	{
+		cursor.X = 5;
+		cursor.Y = 21;
+		setCursor(cursor);
+		std::cout << "\x1b[31mALL IN\x1b[0m";
+	}
+	if (!croupier.getChips())
+	{
+		cursor.X = 5;
+		cursor.Y = 2;
+		setCursor(cursor);
+		std::cout << "\x1b[31mALL IN\x1b[0m";
+	}
+	
+	
+}
+
+bool Interface::checkIsPartyOver(CardHolder& player, CardHolder& croupier)
+{
+	if (player.getChips() == 0 || croupier.getChips() == 0) return true;
+	return false;
+}
+
 short Interface::selectMenuActions()
 {
 	short cursor = 1;
@@ -273,8 +443,6 @@ void Interface::showBank()
 
 void Interface::bet(short bet, CardHolder& cardHolder)
 {
-	if (bet < 1 || bet > 3) throw "bet have only three optons: 1 - bet, 2 - 3x bet, 3 - blind";
-	bet = bet == 1 ? 50 : bet == 2 ? 150 : 25;
 	cardHolder.bet(bet);
 	showChips(cardHolder);
 	bank += bet;
@@ -286,19 +454,21 @@ bool Interface::action(CardHolder& player, CardHolder& croupier)
 	short action = selectMenuActions();
 	if (action != 4)
 	{
-		this->bet(action, player);
-		this->bet(action, croupier);
+		short bet = action == 1 ? 50 : action == 2 ? 150 : 25;
+		short playerChips = player.getChips();
+		short croupierChips = croupier.getChips();
+		if (bet > playerChips) bet = playerChips;
+		else if (bet > croupierChips) bet = croupierChips;
+		this->bet(bet, player);
+		this->bet(bet, croupier);
 		return true;
 	}
-		croupier.winChips(bank);
-		showChips(croupier);
-		bank = 0;
-		showBank();
 		return false;
 }
 
 void Interface::initRound(Deck& deck, CardHolder& player, CardHolder& croupier)
 {
+	isFold = false;
 	showChipsPlaceHolders();
 	showChips(player);
 	showChips(croupier);
@@ -312,26 +482,85 @@ void Interface::initRound(Deck& deck, CardHolder& player, CardHolder& croupier)
 	showCards(player, true);
 	showCards(croupier, false);
 	Sleep(1000);
-	bet(3, player);
-	bet(3, croupier);
+	bet(25, player);
+	bet(25, croupier);
 }
 
 void Interface::round(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table)
 {
 	bool isAction = action(player, croupier);
+	if (!isAction) isFold = true;
 	++roundCount;
 	while (isAction && roundCount < 4)
 	{
 		table.takeCards(deck);
 		showCards(table, true);
-		isAction = action(player, croupier);
+		WinnerDeterminant checkCombination(player, table);
+		checkCombination.combinationHandler(player);
+		std::vector<Card> playerCombination = checkCombination.getPlayerCombination();
+		short combinationID = checkCombination.getPlayerCombinationID();
+		displayCombination(player.getID(), combinationID, playerCombination);
+		if (!isAllIn(player, croupier)) isAction = action(player, croupier);
+		else
+		{
+			showAllin(player, croupier);
+			Sleep(1000);
+		}
 		++roundCount;
+		if (!isAction) isFold = true;
 	}
 }
 
-void Interface::showDown(CardHolder& croupier)
+void Interface::showDown(CardHolder& croupier, CardHolder& player, CardHolder& table)
 {
 	showCards(croupier, true);
+	if (!isFold)
+	{
+		WinnerDeterminant whoseWin(player, croupier, table);
+		whoseWin.combinationHandler(player);
+		whoseWin.combinationHandler(croupier);
+		std::vector<Card> croupierCombination = whoseWin.getCroupierCombination();
+		short croupierCombinationID = whoseWin.getCroupierCombinationID();
+		displayCombination(croupier.getID(), croupierCombinationID, croupierCombination);
+		short whoWin = whoseWin.compareCombinations();
+		if (whoWin == 1)
+		{
+			player.winChips(bank);
+			displayWin(player.getID());
+			bank = 0;
+		}
+		else if (whoWin == 2)
+		{
+			croupier.winChips(bank);
+			displayWin(croupier.getID());
+			bank = 0;
+		}
+		else
+		{
+			player.winChips(bank / 2);
+			croupier.winChips(bank / 2);
+			displayWin(0);
+			bank = 0;
+		}
+	}
+	else
+	{
+		croupier.winChips(bank);
+		displayWin(croupier.getID());
+		bank = 0;
+		if (roundCount > 1)
+		{
+			WinnerDeterminant whoseWin(player, croupier, table);
+			whoseWin.combinationHandler(player);
+			whoseWin.combinationHandler(croupier);
+			std::vector<Card> croupierCombination = whoseWin.getCroupierCombination();
+			short croupierCombinationID = whoseWin.getCroupierCombinationID();
+			displayCombination(croupier.getID(), croupierCombinationID, croupierCombination);
+		}
+	}
+	showBank();
+	showChips(player);
+	showChips(croupier);
 }
 
 void Interface::underlineMenuActions(short action)
