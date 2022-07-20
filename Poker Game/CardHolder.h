@@ -22,17 +22,17 @@ public:
 class Player : public CardHolder
 {
 	void setID() override;
-	void setChips() override;
 public:
 	Player();
+	void setChips() override;
 };
 
 class Croupier : public CardHolder
 {
 	void setID() override;
-	void setChips() override;
 public:
 	Croupier();
+	void setChips() override;
 };
 
 class Table : public CardHolder

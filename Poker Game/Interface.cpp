@@ -369,6 +369,171 @@ void Interface::showAllin(CardHolder& player, CardHolder& croupier)
 	
 }
 
+void Interface::showChipsChange(CardHolder& cardHolder, bool isBet, short change)
+{
+	short ID = cardHolder.getID();
+	COORD cursor;
+	if (ID == 1)
+	{
+		cursor.X = 5;
+		cursor.Y = 21;
+		setCursor(cursor);
+		std::cout << "        ";
+		setCursor(cursor);
+		if (isBet) std::cout << "\x1b[31m-" << change << "\x1b[0m";
+		else std::cout << "\x1b[32m+" << change << "\x1b[0m";
+	}
+	if (ID == 2)
+	{
+		cursor.X = 5;
+		cursor.Y = 2;
+		setCursor(cursor);
+		std::cout << "        ";
+		setCursor(cursor);
+		if (isBet) std::cout << "\x1b[31m-" << change << "\x1b[0m";
+		else std::cout << "\x1b[32m+" << change << "\x1b[0m";
+	}
+}
+
+void Interface::askIfRebuy()
+{
+	std::string askPlaceHolder = "+++++++++++++++++++++++++\n+                       +\n+++++++++++++++++++++++++\n+           +           +\n+++++++++++++++++++++++++";
+	COORD cursor;
+	cursor.X = 45;
+	cursor.Y = 12;
+	setCursor(cursor);
+	for (size_t i{ 0 }; i < askPlaceHolder.size(); i++)
+	{
+		std::string displayLine = getLineTodisplay(i, askPlaceHolder);
+		cursor.Y++;
+		setCursor(cursor);
+		std::cout << displayLine;
+	}
+	cursor.X = 47;
+	cursor.Y = 14;
+	setCursor(cursor);
+	std::cout << "\x1b[32mDO YOU WANT TO REBUY?\x1b[0m";
+	cursor.X = 50;
+	cursor.Y = 16;
+	setCursor(cursor);
+	std::cout << "\x1b[33mYES\x1b[0m";
+	cursor.X = 63;
+	setCursor(cursor);
+	std::cout << "\x1b[31mNO\x1b[0m";
+}
+
+void Interface::underlineRebuyMenu(short menu)
+{
+	std::string frame = "\x1b[31m+++++++++++\x1b[0m";
+	COORD cursor;
+	short target = menu == 1 ? 46 : 58;
+	cursor.X = target;
+	cursor.Y = 17;
+	setCursor(cursor);
+	std::cout << frame;
+}
+
+void Interface::eraseUnderlineRebuyMenu(short menu)
+{
+	std::string frame = "+++++++++++";
+	COORD cursor;
+	short target = menu == 1 ? 46 : 58;
+	cursor.X = target;
+	cursor.Y = 17;
+	setCursor(cursor);
+	std::cout << frame;
+}
+
+bool Interface::checkIfWantToContinue()
+{
+	askIfRebuy();
+	short cursor = 1;
+	underlineRebuyMenu(1);
+	while (1)
+	{
+		short action = _getch();
+		if (action == -32) action = _getch();
+		else if (action == 13)
+		{
+			eraseUnderlineRebuyMenu(cursor);
+			return cursor == 1 ? true : false;
+		}
+		switch (action)
+		{
+		case 77:
+			if (cursor < 2)
+			{
+				eraseUnderlineRebuyMenu(cursor);
+				underlineRebuyMenu(++cursor);
+			}
+
+			break;
+		case 75:
+			if (cursor > 1)
+			{
+				eraseUnderlineRebuyMenu(cursor);
+				underlineRebuyMenu(--cursor);
+			}
+		}
+	}
+}
+
+void Interface::eraseRebuyMenu()
+{
+	std::string erase = "                           ";
+	COORD cursor;
+	cursor.X = 45;
+	cursor.Y = 12;
+	setCursor(cursor);
+	for (size_t i{ 0 }; i < 7; i++)
+	{
+		std::cout << erase;
+		cursor.Y++;
+		setCursor(cursor);
+	}
+}
+
+bool Interface::isContinue(CardHolder& player)
+{
+	if (!player.getChips())
+	{
+		if (checkIfWantToContinue())
+		{
+			player.setChips();
+			return true;
+		}
+		eraseRebuyMenu();
+	}
+	return false;
+}
+
+void Interface::askContinue()
+{
+	COORD cursor;
+	cursor.X = 1;
+	cursor.Y = 26;
+	setCursor(cursor);
+	std::cout << "                              ";
+	cursor.Y++;
+	setCursor(cursor);
+	std::cout << "           \x1b[33mCONTINUE\x1b[0m           ";
+	cursor.Y++;
+	setCursor(cursor);
+	std::cout << "\x1b[31m++++++++++++++++++++++++++++++++\x1b[0m";
+	cursor.Y++;
+	setCursor(cursor);
+	std::cout << "\x1b[31m++++++++++++++++++++++++++++++++\x1b[0m";
+}
+
+void Interface::waitContinue()
+{
+	while (true)
+	{
+		char isContinue = _getch();
+		if (isContinue == 13) return;
+	}
+}
+
 bool Interface::checkIsPartyOver(CardHolder& player, CardHolder& croupier)
 {
 	if (player.getChips() == 0 || croupier.getChips() == 0) return true;
@@ -444,6 +609,8 @@ void Interface::showBank()
 void Interface::bet(short bet, CardHolder& cardHolder)
 {
 	cardHolder.bet(bet);
+	showChipsChange(cardHolder, true, bet);
+	Sleep(500);
 	showChips(cardHolder);
 	bank += bet;
 	showBank();
@@ -527,27 +694,36 @@ void Interface::showDown(CardHolder& croupier, CardHolder& player, CardHolder& t
 		{
 			player.winChips(bank);
 			displayWin(player.getID());
+			showChipsChange(player, false, bank);
 			bank = 0;
+			Sleep(1000);
 		}
 		else if (whoWin == 2)
 		{
 			croupier.winChips(bank);
 			displayWin(croupier.getID());
+			showChipsChange(croupier, false, bank);
 			bank = 0;
+			Sleep(1000);
 		}
 		else
 		{
 			player.winChips(bank / 2);
 			croupier.winChips(bank / 2);
 			displayWin(0);
+			showChipsChange(player, false, bank / 2);
+			showChipsChange(croupier, false, bank / 2);
 			bank = 0;
+			Sleep(1000);
 		}
 	}
 	else
 	{
 		croupier.winChips(bank);
 		displayWin(croupier.getID());
+		showChipsChange(croupier, false, bank);
 		bank = 0;
+		Sleep(1000);
 		if (roundCount > 1)
 		{
 			WinnerDeterminant whoseWin(player, croupier, table);

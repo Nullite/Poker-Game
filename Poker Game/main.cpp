@@ -42,9 +42,17 @@ int main()
 			game.initRound(deck, player, croupier);
 			game.round(deck, player, croupier, table);
 			game.showDown(croupier, player, table);
-			Sleep(10000);
+			game.askContinue();
+			game.waitContinue();
 			game.endRound(deck, player, croupier, table);
-			if (game.checkIsPartyOver(player, croupier)) exit(0);
+			if (game.checkIsPartyOver(player, croupier))
+			{
+				if (!player.getChips())
+				{
+					if (game.isContinue(player)) continue;
+				}
+				exit(0);
+			}
 		}
 	}
 	catch (const char* exept)

@@ -22,6 +22,12 @@ class Interface
 	void clearWinDisplay();
 	bool isAllIn(CardHolder& player, CardHolder& croupier);
 	void showAllin(CardHolder& player, CardHolder& croupier);
+	void showChipsChange(CardHolder& cardHolder, bool isBet, short change);
+	void askIfRebuy();
+	void underlineRebuyMenu(short menu);
+	void eraseUnderlineRebuyMenu(short menu);
+	bool checkIfWantToContinue();
+	void eraseRebuyMenu();
 	
 public:
 	Interface();
@@ -39,5 +45,8 @@ public:
 	void round(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table);
 	void showDown(CardHolder& croupier, CardHolder& player, CardHolder& table);
 	bool checkIsPartyOver(CardHolder& player, CardHolder& croupier);
+	void askContinue();
+	void waitContinue();
+	bool isContinue(CardHolder& player);
 };
 

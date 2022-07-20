@@ -205,7 +205,7 @@ std::vector<Card> WinnerDeterminant::getSequence(std::vector<Card> cards)
 			{
 				if (!i) cards.erase(cards.begin());
 				else cards.erase(cards.begin(), cards.begin() + i);
-				i = 0;
+				i = -1;
 				count = 1;
 			}
 			else
