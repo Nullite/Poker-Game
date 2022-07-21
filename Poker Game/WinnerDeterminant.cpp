@@ -197,8 +197,8 @@ std::vector<Card> WinnerDeterminant::getSequence(std::vector<Card> cards)
 	short count = 1;
 	for (size_t i{ 0 }; i < cards.size() - 1; ++i)
 	{
-		short shortValue1 = convertValueToShort(cards.at(i).getBlanck().value);
-		short shortValue2 = convertValueToShort(cards.at(i + 1).getBlanck().value);
+		short shortValue1 = Card::convertValueToShort(cards.at(i).getBlanck().value);
+		short shortValue2 = Card::convertValueToShort(cards.at(i + 1).getBlanck().value);
 		if (shortValue1 != shortValue2 + 1 && count != 5)
 		{
 			if (count < 4 && shortValue1 != shortValue2)
@@ -231,23 +231,6 @@ std::vector<Card> WinnerDeterminant::getSequence(std::vector<Card> cards)
 	return sequence;
 }
 
-inline short WinnerDeterminant::convertValueToShort(std::string value)
-{
-	if (value == "2") return 2;
-	if (value == "3") return 3;
-	if (value == "4") return 4;
-	if (value == "5") return 5;
-	if (value == "6") return 6;
-	if (value == "7") return 7;
-	if (value == "8") return 8;
-	if (value == "9") return 9;
-	if (value == "10") return 10;
-	if (value == "J") return 11;
-	if (value == "Q") return 12;
-	if (value == "K") return 13;
-	if (value == "A") return 14;
-}
-
 void WinnerDeterminant::sortCards(std::vector<Card>& cards)
 {
 	short size = cards.size();
@@ -257,8 +240,8 @@ void WinnerDeterminant::sortCards(std::vector<Card>& cards)
 
 		for (size_t i {0}; i < size; i++)
 		{
-			short shortValue1 = convertValueToShort(cards.at(i).getBlanck().value);
-			short shortValue2 = convertValueToShort(cards.at(i + 1).getBlanck().value);
+			short shortValue1 = Card::convertValueToShort(cards.at(i).getBlanck().value);
+			short shortValue2 = Card::convertValueToShort(cards.at(i + 1).getBlanck().value);
 			if (shortValue1 < shortValue2)
 			{
 				std::swap(cards.at(i), cards.at(i + 1));

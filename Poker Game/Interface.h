@@ -28,19 +28,19 @@ class Interface
 	void eraseUnderlineRebuyMenu(short menu);
 	bool checkIfWantToContinue();
 	void eraseRebuyMenu();
-	
-public:
-	Interface();
-	void showCards(CardHolder& cardHolder, bool isFace);
-	void endRound(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table);
 	void showChips(CardHolder& cardholder);
 	void showChipsPlaceHolders();
-	void showActionPlaceHolder();	
+	void showActionPlaceHolder();
 	short selectMenuActions();
+	void showCards(CardHolder& cardHolder, bool isFace);
 	void showBankPlaceHolder();
 	void showBank();
 	void bet(short bet, CardHolder& cardHolder);
 	bool action(CardHolder& player, CardHolder& croupier);
+	
+public:
+	Interface();	
+	void endRound(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table);		
 	void initRound(Deck& deck, CardHolder& player, CardHolder& croupier);
 	void round(Deck& deck, CardHolder& player, CardHolder& croupier, CardHolder& table);
 	void showDown(CardHolder& croupier, CardHolder& player, CardHolder& table);

@@ -16,8 +16,7 @@ class Card
 	static inline short counter = -1;
 	static inline char suit = hearts;
 	static inline short valuePointer = 0;
-	static inline short convertValueToShort(std::string value);
-
+	
 	std::string card;
 	std::string cardBack;
 public:
@@ -29,4 +28,6 @@ public:
 	friend bool operator == (Card& card1, Card& card2);
 	friend bool operator > (Card& card1, Card& card2);
 	friend bool operator < (Card& card1, Card& card2);
-};
+	const friend std::ostream& operator << (std::ostream& out, Card& card);
+	static inline short convertValueToShort(std::string value);
+ };

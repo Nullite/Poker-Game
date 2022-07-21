@@ -13,7 +13,6 @@ class WinnerDeterminant
 	short playerCobinationID;
 	short croupierCombinationID;
 
-	static inline short convertValueToShort(std::string value);
 	short getRepeatCombinationID(std::vector<std::vector<Card>>& repeats);
 	short getSequenceCombinationID(std::vector<Card> sequence, bool isFlush);
 	std::vector < std::vector<Card>> getRepeats(std::vector<Card> cards);

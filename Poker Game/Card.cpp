@@ -77,3 +77,9 @@ bool operator<(Card& card1, Card& card2)
 {
 	return Card::convertValueToShort(card1.blanck.value) < Card::convertValueToShort(card2.blanck.value);
 }
+
+const std::ostream& operator<<(std::ostream& out, Card& card)
+{
+	out << card.blanck.value << card.blanck.suit;
+	return out;
+}

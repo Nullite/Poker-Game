@@ -229,7 +229,8 @@ void Interface::displayCombination(short ID, short combinationID, std::vector<Ca
 		setCursor(cursor);
 		for (size_t i{ 0 }; i < combination.size(); ++i)
 		{
-			std::cout << combination.at(i).getBlanck().value << combination.at(i).getBlanck().suit << ' ';
+			std::cout << combination.at(i);
+			std::cout << ' ';
 		}
 		break;
 	case 2:
