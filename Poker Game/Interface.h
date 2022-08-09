@@ -23,10 +23,10 @@ class Interface
 	bool isAllIn(CardHolder& player, CardHolder& croupier);
 	void showAllin(CardHolder& player, CardHolder& croupier);
 	void showChipsChange(CardHolder& cardHolder, bool isBet, short change);
-	void askIfRebuy();
+	void askIfRebuy(CardHolder& cardHolder);
 	void underlineRebuyMenu(short menu);
 	void eraseUnderlineRebuyMenu(short menu);
-	bool checkIfWantToContinue();
+	bool checkIfWantToContinue(CardHolder& cardholder);
 	void eraseRebuyMenu();
 	void showChips(CardHolder& cardholder);
 	void showChipsPlaceHolders();

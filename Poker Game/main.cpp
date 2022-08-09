@@ -22,8 +22,16 @@ int main()
 			{
 				if (!player.getChips())
 				{
-					if (game.isContinue(player)) continue;
+					if (game.isContinue(player))
+					{
+						continue;
+					}
 				}
+				else if (!croupier.getChips())
+				{
+					if (game.isContinue(croupier)) continue;
+				}
+				system("cls");
 				exit(0);
 			}
 		}

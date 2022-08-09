@@ -396,8 +396,9 @@ void Interface::showChipsChange(CardHolder& cardHolder, bool isBet, short change
 	}
 }
 
-void Interface::askIfRebuy()
+void Interface::askIfRebuy(CardHolder& cardHolder)
 {
+	short ID = cardHolder.getID();
 	std::string askPlaceHolder = "+++++++++++++++++++++++++\n+                       +\n+++++++++++++++++++++++++\n+           +           +\n+++++++++++++++++++++++++";
 	COORD cursor;
 	cursor.X = 45;
@@ -413,7 +414,7 @@ void Interface::askIfRebuy()
 	cursor.X = 47;
 	cursor.Y = 14;
 	setCursor(cursor);
-	std::cout << "\x1b[32mDO YOU WANT TO REBUY?\x1b[0m";
+	ID == 1 ? std::cout << "\x1b[32mDO YOU WANT TO REBUY?\x1b[0m" : std::cout << "\x1b[32mDO YOU WANNA CONTINUE?\x1b[0m";
 	cursor.X = 50;
 	cursor.Y = 16;
 	setCursor(cursor);
@@ -445,9 +446,9 @@ void Interface::eraseUnderlineRebuyMenu(short menu)
 	std::cout << frame;
 }
 
-bool Interface::checkIfWantToContinue()
+bool Interface::checkIfWantToContinue(CardHolder& cardholder)
 {
-	askIfRebuy();
+	askIfRebuy(cardholder);
 	short cursor = 1;
 	underlineRebuyMenu(1);
 	while (1)
@@ -494,17 +495,15 @@ void Interface::eraseRebuyMenu()
 	}
 }
 
-bool Interface::isContinue(CardHolder& player)
+bool Interface::isContinue(CardHolder& cardHolder)
 {
-	if (!player.getChips())
+	if (checkIfWantToContinue(cardHolder))
 	{
-		if (checkIfWantToContinue())
-		{
-			player.setChips();
-			return true;
-		}
+		cardHolder.setChips();
 		eraseRebuyMenu();
+		return true;
 	}
+	eraseRebuyMenu();
 	return false;
 }
 
@@ -520,10 +519,10 @@ void Interface::askContinue()
 	std::cout << "           \x1b[33mCONTINUE\x1b[0m           ";
 	cursor.Y++;
 	setCursor(cursor);
-	std::cout << "\x1b[31m++++++++++++++++++++++++++++++++\x1b[0m";
+	std::cout << "\x1b[31m+++++++++++++++++++++++++++++++\x1b[0m";
 	cursor.Y++;
 	setCursor(cursor);
-	std::cout << "\x1b[31m++++++++++++++++++++++++++++++++\x1b[0m";
+	std::cout << "\x1b[31m+++++++++++++++++++++++++++++++\x1b[0m";
 }
 
 void Interface::waitContinue()
