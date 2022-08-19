@@ -1,5 +1,5 @@
-#pragma once
 #include "Deck.h"
+#pragma once
 
 class CardHolder
 {

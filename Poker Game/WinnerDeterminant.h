@@ -1,5 +1,6 @@
-#pragma once
 #include "CardHolder.h"
+#pragma once
+
 class WinnerDeterminant
 {
 	enum {highCard, pair, twoPairs, set, straight, flush, fullHouse, fourOfTheKind, straightFlush, royalFlush};

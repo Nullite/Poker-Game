@@ -1,9 +1,10 @@
-#pragma once
 #include <conio.h>
 #include <Windows.h>
 #include <random>
 #include <algorithm>
 #include "Card.h"
+#pragma once
+
 class Deck
 {
 	std::vector<Card*> deck;

@@ -1,5 +1,6 @@
-#pragma once
 #include "WinnerDeterminant.h"
+#pragma once
+
 class Interface
 {
 	bool isFold;
