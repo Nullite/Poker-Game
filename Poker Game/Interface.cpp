@@ -218,10 +218,10 @@ void Interface::displayCombination(short ID, short combinationID, std::vector<Ca
 		cursor.X = 80;
 		cursor.Y = 25;
 		setCursor(cursor);
-		std::cout << "                ";
+		std::cout << "                    ";
 		cursor.Y++;
 		setCursor(cursor);
-		std::cout << "                ";
+		std::cout << "                    ";
 		cursor.Y--;
 		setCursor(cursor);
 		std::cout << stringCombination << ':';
@@ -237,10 +237,10 @@ void Interface::displayCombination(short ID, short combinationID, std::vector<Ca
 		cursor.X = 80;
 		cursor.Y = 2;
 		setCursor(cursor);
-		std::cout << "                ";
+		std::cout << "                    ";
 		cursor.Y++;
 		setCursor(cursor);
-		std::cout << "                ";
+		std::cout << "                    ";
 		cursor.Y--;
 		setCursor(cursor);
 		std::cout << stringCombination << ':';
